@@ -47,9 +47,6 @@ public class ChessBoard extends StackPane {
             addPiece(squares[black_col][1], new Pawn(black_col, 1, "black", "Pawn"));
         }
 
-        addPiece(squares[0][5], new Pawn(0, 5, "black", "Pawn"));
-        addPiece(squares[2][5], new Pawn(0, 5, "black", "Pawn"));
-
         addPiece(squares[0][0], new Rook(0, 0, "black", "Rook"));
         addPiece(squares[7][0], new Rook(7, 0, "black", "Rook")); // Sets Black Rooks
 
