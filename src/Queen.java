@@ -1,6 +1,13 @@
+import java.util.ArrayList;
+
 public class Queen extends Piece {
-    final MovesList queenMoves = new MovesList(new Object()); //Data structure for valid Pawn moves.
-    public Queen(char col, int row, char color){
-        super(col, row, 'Q', queenMoves, color);
+    public Queen(int pos_X, int pos_Y, String color, String name) {
+        super(pos_X, pos_Y, color, name);
+        setPieceImage();
+    }
+
+    @Override
+    public ArrayList<Square> getValidMoves() {
+        return null;
     }
 }

@@ -1,6 +1,14 @@
+import java.util.ArrayList;
+
 public class Bishop extends Piece {
-    final MovesList bishopMoves = new MovesList(new Object()); //Data structure for valid Pawn moves.
-    public Bishop(char col, int row, char color){
-        super(col, row, 'B', bishopMoves, color);
+
+    public Bishop(int pos_X, int pos_Y, String color, String name) {
+        super(pos_X, pos_Y, color, name);
+        setPieceImage();
+    }
+
+    @Override
+    public ArrayList<Square> getValidMoves() {
+        return null;
     }
 }
