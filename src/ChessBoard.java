@@ -24,7 +24,7 @@ public class ChessBoard extends StackPane {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 Square square = new Square(i, j);
-                board.add(square, i, j, 1, 1);
+                board.add(square, j, i, 1, 1);
                 squares[i][j] = square;
             }
         }
