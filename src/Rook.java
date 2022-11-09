@@ -11,56 +11,46 @@ public class Rook extends Piece {
 
         ArrayList<Square> moves = new ArrayList<>();
 
-        try {
-            for (int x = this.pos_X; x < 8; x++) {
-                if (ChessBoard.squares[x][this.pos_Y].isOccupied()
-                        && !ChessBoard.squares[x][this.pos_Y].pieceOnSquare().getColor().equals(this.color)) {
-                    moves.add(ChessBoard.squares[x][this.pos_Y]);
-                    break;
-                } else if (ChessBoard.squares[x][this.pos_Y].isOccupied()) {
-                    continue;
-                } else {
-                    moves.add(ChessBoard.squares[x][this.pos_Y]);
-                }
-            }
+        int checkX=pos_X-1;
+        //Check squares to left
+        while(checkX>=0){
+            Piece posPiece = ChessBoard.squares[checkX][pos_Y].pieceOnSquare();
+                if(posPiece==null||(!(posPiece.name.equals("King"))&&!(posPiece.color.equals(this.color))))
+                    moves.add(ChessBoard.squares[checkX][pos_Y]);
+            checkX--;
+            if(!(posPiece==null))
+                break;
+        }
+        checkX=pos_X+1;
+        //Check squares to right
+        while(checkX<=7){
+            Piece posPiece = ChessBoard.squares[checkX][pos_Y].pieceOnSquare();
+                if(posPiece==null||(!(posPiece.name.equals("King"))&&!(posPiece.color.equals(this.color))))
+                    moves.add(ChessBoard.squares[checkX][pos_Y]);
+            checkX++;
+            if(!(posPiece==null))
+                break;
+        }
 
-            for (int x = this.pos_X; x >= 0; x--) {
-                if (ChessBoard.squares[x][this.pos_Y].isOccupied()
-                        && !ChessBoard.squares[x][this.pos_Y].pieceOnSquare().getColor().equals(this.color)) {
-                    moves.add(ChessBoard.squares[x][this.pos_Y]);
-                    break;
-                } else if (ChessBoard.squares[x][this.pos_Y].isOccupied()) {
-                    continue;
-                } else {
-                    moves.add(ChessBoard.squares[x][this.pos_Y]);
-                }
-            }
-
-            for (int y = this.pos_Y; y < 8; y++) {
-                if (ChessBoard.squares[this.pos_X][y].isOccupied()
-                        && !ChessBoard.squares[this.pos_X][y].pieceOnSquare().getColor().equals(this.color)) {
-                    moves.add(ChessBoard.squares[this.pos_X][y]);
-                    break;
-                } else if (ChessBoard.squares[this.pos_X][y].isOccupied()) {
-                    continue;
-                } else {
-                    moves.add(ChessBoard.squares[this.pos_X][y]);
-                }
-            }
-
-            for (int y = this.pos_Y; y >= 0; y--) {
-                if (ChessBoard.squares[this.pos_X][y].isOccupied()
-                        && !ChessBoard.squares[this.pos_X][y].pieceOnSquare().getColor().equals(this.color)) {
-                    moves.add(ChessBoard.squares[this.pos_X][y]);
-                    break;
-                } else if (ChessBoard.squares[this.pos_X][y].isOccupied()) {
-                    continue;
-                } else {
-                    moves.add(ChessBoard.squares[this.pos_X][y]);
-                }
-            }
-        } catch (IndexOutOfBoundsException e) {
-
+        int checkY=pos_Y-1;
+        //Check squares below
+        while(checkY>=0){
+            Piece posPiece = ChessBoard.squares[pos_X][checkY].pieceOnSquare();
+                if(posPiece==null||(!(posPiece.name.equals("King"))&&!(posPiece.color.equals(this.color))))
+                    moves.add(ChessBoard.squares[pos_X][checkY]);
+            checkY--;
+            if(!(posPiece==null))
+                break;
+        }
+        checkY=pos_Y+1;
+        //Check squares above
+        while(checkY<=7){
+            Piece posPiece = ChessBoard.squares[pos_X][checkY].pieceOnSquare();
+                if(posPiece==null||(!(posPiece.name.equals("King"))&&!(posPiece.color.equals(this.color))))
+                    moves.add(ChessBoard.squares[pos_X][checkY]);
+            checkY++;
+            if(!(posPiece==null))
+                break;
         }
 
         return moves;

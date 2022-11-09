@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import javafx.geometry.Insets;
 import javafx.scene.effect.Glow;
 import javafx.scene.layout.Background;
@@ -33,6 +35,7 @@ public class Square extends StackPane {
 
         this.setOnMouseClicked(e -> { // clears all glowing squares when the piece is deselected
             System.out.println("square clicked at " + this.toString());
+            
             if (e.getTarget() instanceof Square) {
                 for (int i = 0; i < 8; i++) {
                     for (int j = 0; j < 8; j++) {
@@ -40,11 +43,22 @@ public class Square extends StackPane {
                     }
                 }
             }
+            if (this.pieceOnSquare()!=null){
+                ArrayList<Square> moveSquares = this.pieceOnSquare().getValidMoves();
+                for (Square square : moveSquares) {
+                    square.setEffect(new Glow(0.5));
+                }
+            }
         });
     }
 
     public Piece pieceOnSquare() { // returns the piece reference that's on the square
-        return ((Piece) ChessBoard.squares[x][y].getChildren().get(0));
+        try{
+            return ((Piece) ChessBoard.squares[x][y].getChildren().get(0));
+        }
+        catch(java.lang.IndexOutOfBoundsException e){
+            return null;
+        }
     }
 
     public void setOccupied(boolean occupied) {

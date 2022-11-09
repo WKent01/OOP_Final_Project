@@ -76,4 +76,5 @@ public class ChessBoard extends StackPane {
         addPiece(squares[7][4], new King(4, 7, "white", "King"));
 
     }
+
 }
