@@ -1,3 +1,5 @@
+import java.util.Stack;
+import java.util.ArrayList;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
@@ -6,7 +8,11 @@ public class ChessBoard extends StackPane {
     GridPane board;
     static Square[][] squares = new Square[8][8]; // Square matrix that will contain all the squares of the board and
                                                   // the pieces that will be on the squares
-
+    static Stack<String> pastMoves = new Stack<>(); //Push each move to this stack after it has been played. Used for replays and handling en passant.
+    static ArrayList<Square> WhiteValidMoves = new ArrayList<>(); //List of all current squares that white pieces can be moved to. Will probably be refactored to an ArrayList of ArrayLists, where each one is for an individual piece. Used for king movement check prevention.
+    static ArrayList<Square> BlackValidMoves = new ArrayList<>(); //Same as above, but for black.
+    static King blackKing;
+    static King whiteKing;
     public ChessBoard(GridPane board) {
         this.board = board;
 
@@ -41,6 +47,12 @@ public class ChessBoard extends StackPane {
         square.getChildren().add(piece);
         square.setOccupied(true);
     }
+    public static boolean isCheck(String color){ //This method will return true if the specified color is in check.
+        return false;
+    }
+    public static boolean isCheckmate(String color){ //This method will return true if the specified color is checkmated.
+        return isCheck(color)&&(color.equals("White")?whiteKing:blackKing).getValidMoves().size()>0; 
+    }
 
     public void addPieces() { // creates all the pieces for the game
         for (int i = 0; i < 8; i++) { // Sets the black pawns to the board
@@ -57,7 +69,7 @@ public class ChessBoard extends StackPane {
         addPiece(squares[0][5], new Bishop(5, 0, "black", "Bishop"));
 
         addPiece(squares[0][3], new Queen(3, 0, "black", "Queen")); // Sets the black queen and king respectivly
-        addPiece(squares[0][4], new King(4, 0, "black", "King"));
+        addPiece(squares[0][4], (blackKing = new King(4, 0, "black", "King")));
 
         for (int i = 0; i < 8; i++) { // Sets the white pawns to the board
             addPiece(squares[6][i], new Pawn(i, 6, "white", "Pawn"));
@@ -73,7 +85,7 @@ public class ChessBoard extends StackPane {
         addPiece(squares[7][5], new Bishop(5, 7, "white", "Bishop"));
 
         addPiece(squares[7][3], new Queen(3, 7, "white", "Queen")); // Sets the white queen and king respectivly
-        addPiece(squares[7][4], new King(4, 7, "white", "King"));
+        addPiece(squares[7][4], (whiteKing = new King(4, 7, "white", "King")));
 
     }
 

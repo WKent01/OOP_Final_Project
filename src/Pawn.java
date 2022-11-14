@@ -11,7 +11,7 @@ public class Pawn extends Piece {
     public ArrayList<Square> getValidMoves() {
 
         ArrayList<Square> moves = new ArrayList<>();
-
+            if(ChessBoard.pastMoves.size()>0)
         try {
             if (this.color.equals("white")) {
                 if (this.pos_Y == 6) { // checks to see if the pawn is on its' inital row which then allows the pawn to
@@ -37,6 +37,7 @@ public class Pawn extends Piece {
                     }
                 }
 
+
             } else { // the piece is a black pawn
                 if (this.pos_Y == 1) {
                     if (!ChessBoard.squares[this.pos_X][this.pos_Y + 2].isOccupied()) {
@@ -59,6 +60,18 @@ public class Pawn extends Piece {
                     }
                 }
             }
+            //EN CROISSANT
+            if(this.pos_X>0 && ChessBoard.squares[this.pos_X-1][this.pos_Y].isOccupied() && ChessBoard.squares[this.pos_X-1][this.pos_Y].pieceOnSquare().name.equals("Pawn")){
+                String lastMove = ChessBoard.pastMoves.peek(); //note: not currently sure how to make sure it was a double move and not just a second single move. will fix later.
+                if(lastMove.length()==2 && ChessStrings.xLookup.indexOf(Integer.parseInt(lastMove.substring(1)))==this.pos_X-1 && ChessStrings.yLookup.indexOf(lastMove.substring(0,1))==this.pos_Y)
+                    moves.add(ChessBoard.squares[this.pos_X-1][this.pos_Y]); 
+            }
+            if(this.pos_X<7 && ChessBoard.squares[this.pos_X+1][this.pos_Y].isOccupied() && ChessBoard.squares[this.pos_X+1][this.pos_Y].pieceOnSquare().name.equals("Pawn")){
+                String lastMove = ChessBoard.pastMoves.peek(); //note: not currently sure how to make sure it was a double move and not just a second single move. will fix later.
+                if(lastMove.length()==2 && ChessStrings.xLookup.indexOf(Integer.parseInt(lastMove.substring(1)))==this.pos_X+1 && ChessStrings.yLookup.indexOf(lastMove.substring(0,1))==this.pos_Y)
+                    moves.add(ChessBoard.squares[this.pos_X+1][this.pos_Y]); 
+            }
+
         } catch (IndexOutOfBoundsException e) {
             // this error is only thrown if a square was accessed and no piece was on that
             // square
