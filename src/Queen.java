@@ -11,105 +11,91 @@ public class Queen extends Piece {
 
         ArrayList<Square> moves = new ArrayList<>();
 
-        try {
-            for (int x = this.pos_X; x < 8; x++) { // checks the right side of the queen
-                if (ChessBoard.squares[x][this.pos_Y].isOccupied()
-                        && !ChessBoard.squares[x][this.pos_Y].pieceOnSquare().getColor().equals(this.color)) {
-                    moves.add(ChessBoard.squares[x][this.pos_Y]);
-                    break;
-                } else if (ChessBoard.squares[x][this.pos_Y].isOccupied()) {
-                    continue;
-                } else {
-                    moves.add(ChessBoard.squares[x][this.pos_Y]);
-                }
-            }
+        int checkX=pos_X-1;
+        //Check squares to left
+        while(checkX>=0){
+            Piece posPiece = ChessBoard.squares[checkX][pos_Y].pieceOnSquare();
+                if(posPiece==null||(!(posPiece.name.equals("King"))&&!(posPiece.color.equals(this.color))))
+                    moves.add(ChessBoard.squares[checkX][pos_Y]);
+            checkX--;
+            if(!(posPiece==null))
+                break;
+        }
+        checkX=pos_X+1;
+        //Check squares to right
+        while(checkX<=7){
+            Piece posPiece = ChessBoard.squares[checkX][pos_Y].pieceOnSquare();
+                if(posPiece==null||(!(posPiece.name.equals("King"))&&!(posPiece.color.equals(this.color))))
+                    moves.add(ChessBoard.squares[checkX][pos_Y]);
+            checkX++;
+            if(!(posPiece==null))
+                break;
+        }
 
-            for (int x = this.pos_X; x >= 0; x--) { // checks the left side of the queen
-                if (ChessBoard.squares[x][this.pos_Y].isOccupied()
-                        && !ChessBoard.squares[x][this.pos_Y].pieceOnSquare().getColor().equals(this.color)) {
-                    moves.add(ChessBoard.squares[x][this.pos_Y]);
-                    break;
-                } else if (ChessBoard.squares[x][this.pos_Y].isOccupied()) {
-                    continue;
-                } else {
-                    moves.add(ChessBoard.squares[x][this.pos_Y]);
-                }
-            }
+        int checkY=pos_Y-1;
+        //Check squares below
+        while(checkY>=0){
+            Piece posPiece = ChessBoard.squares[pos_X][checkY].pieceOnSquare();
+                if(posPiece==null||(!(posPiece.name.equals("King"))&&!(posPiece.color.equals(this.color))))
+                    moves.add(ChessBoard.squares[pos_X][checkY]);
+            checkY--;
+            if(!(posPiece==null))
+                break;
+        }
+        checkY=pos_Y+1;
+        //Check squares above
+        while(checkY<=7){
+            Piece posPiece = ChessBoard.squares[pos_X][checkY].pieceOnSquare();
+                if(posPiece==null||(!(posPiece.name.equals("King"))&&!(posPiece.color.equals(this.color))))
+                    moves.add(ChessBoard.squares[pos_X][checkY]);
+            checkY++;
+            if(!(posPiece==null))
+                break;
+        }
 
-            for (int y = this.pos_Y; y < 8; y++) { // checks in front of the queen
-                if (ChessBoard.squares[this.pos_X][y].isOccupied()
-                        && !ChessBoard.squares[this.pos_X][y].pieceOnSquare().getColor().equals(this.color)) {
-                    moves.add(ChessBoard.squares[this.pos_X][y]);
-                    break;
-                } else if (ChessBoard.squares[this.pos_X][y].isOccupied()) {
-                    continue;
-                } else {
-                    moves.add(ChessBoard.squares[this.pos_X][y]);
-                }
-            }
-
-            for (int y = this.pos_Y; y >= 0; y--) { // checks behind the queen
-                if (ChessBoard.squares[this.pos_X][y].isOccupied()
-                        && !ChessBoard.squares[this.pos_X][y].pieceOnSquare().getColor().equals(this.color)) {
-                    moves.add(ChessBoard.squares[this.pos_X][y]);
-                    break;
-                } else if (ChessBoard.squares[this.pos_X][y].isOccupied()) {
-                    continue;
-                } else {
-                    moves.add(ChessBoard.squares[this.pos_X][y]);
-                }
-            }
-
-            for (int x = this.pos_X, y = this.pos_Y; x < 8 && y < 8; x++, y++) { // Checks the SE diagonal
-                if (ChessBoard.squares[x][y].isOccupied()
-                        && !ChessBoard.squares[x][y].pieceOnSquare().getColor().equals(this.color)) {
-                    moves.add(ChessBoard.squares[x][y]);
+            for (int x = this.pos_X+1, y = this.pos_Y+1; x < 8 && y < 8; x++, y++) { // Checks the SE diagonal
+                if (ChessBoard.squares[x][y].isOccupied()  && !ChessBoard.squares[x][y].pieceOnSquare().getColor().equals(this.color)) {
+                    moves.add(ChessBoard.squares[x][y]); //Occupied by enemy
                     break;
                 } else if (ChessBoard.squares[x][y].isOccupied()) {
-                    continue;
+                    break; //break on ally occupation
                 } else {
                     moves.add(ChessBoard.squares[x][y]);
                 }
             }
 
-            for (int x = this.pos_X, y = this.pos_Y; x < 8 && y >= 0; x++, y--) { // Checks the NE diagonal
-                if (ChessBoard.squares[x][y].isOccupied()
-                        && !ChessBoard.squares[x][y].pieceOnSquare().getColor().equals(this.color)) {
-                    moves.add(ChessBoard.squares[x][y]);
+            for (int x = this.pos_X+1, y = this.pos_Y-1; x < 8 && y >= 0; x++, y--) { // Checks the NE diagonal
+                if (ChessBoard.squares[x][y].isOccupied()  && !ChessBoard.squares[x][y].pieceOnSquare().getColor().equals(this.color)) {
+                    moves.add(ChessBoard.squares[x][y]); //Occupied by enemy
                     break;
                 } else if (ChessBoard.squares[x][y].isOccupied()) {
-                    continue;
+                    break; //break on ally occupation
                 } else {
                     moves.add(ChessBoard.squares[x][y]);
                 }
             }
 
             for (int x = this.pos_X, y = this.pos_Y; x >= 0 && y >= 0; x--, y--) { // Checks the NW diagonal
-                if (ChessBoard.squares[x][y].isOccupied()
-                        && !ChessBoard.squares[x][y].pieceOnSquare().getColor().equals(this.color)) {
-                    moves.add(ChessBoard.squares[x][y]);
+                if (ChessBoard.squares[x][y].isOccupied()  && !ChessBoard.squares[x][y].pieceOnSquare().getColor().equals(this.color)) {
+                    moves.add(ChessBoard.squares[x][y]); //Occupied by enemy
                     break;
                 } else if (ChessBoard.squares[x][y].isOccupied()) {
-                    continue;
+                    break; //break on ally occupation
                 } else {
                     moves.add(ChessBoard.squares[x][y]);
                 }
             }
 
             for (int x = this.pos_X, y = this.pos_Y; x >= 0 && y < 8; x--, y++) { // Checks the SW diagonal
-                if (ChessBoard.squares[x][y].isOccupied()
-                        && !ChessBoard.squares[x][y].pieceOnSquare().getColor().equals(this.color)) {
-                    moves.add(ChessBoard.squares[x][y]);
+                if (ChessBoard.squares[x][y].isOccupied()  && !ChessBoard.squares[x][y].pieceOnSquare().getColor().equals(this.color)) {
+                    moves.add(ChessBoard.squares[x][y]); //Occupied by enemy
                     break;
                 } else if (ChessBoard.squares[x][y].isOccupied()) {
-                    continue;
+                    break; //break on ally occupation
                 } else {
                     moves.add(ChessBoard.squares[x][y]);
                 }
             }
-        } catch (IndexOutOfBoundsException e) {
-            // throws this error only if the square is empty
-        }
 
         return moves;
     }

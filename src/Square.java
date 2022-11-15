@@ -71,6 +71,6 @@ public class Square extends StackPane {
 
     @Override
     public String toString() {
-        return x + " " + y;
+        return "x: "+  x + " y: " + y + " occupied: "+occupied;
     }
 }
