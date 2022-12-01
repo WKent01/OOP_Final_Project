@@ -35,15 +35,17 @@ public class Square extends StackPane {
 
         this.setOnMouseClicked(e -> { // clears all glowing squares when the piece is deselected
             System.out.println("square clicked at " + this.toString());
-            
-            if (e.getTarget() instanceof Square) {
-                for (int i = 0; i < 8; i++) {
-                    for (int j = 0; j < 8; j++) {
-                        ChessBoard.squares[i][j].setEffect(new Glow(0));
-                    }
-                }
-            }
-            if (this.pieceOnSquare()!=null){
+            System.out.println(e.getTarget());
+            // if (e.getTarget() instanceof Square) {
+            // for (int i = 0; i < 8; i++) {
+            // for (int j = 0; j < 8; j++) {
+            // ChessBoard.squares[i][j].setEffect(new Glow(0));
+            // }
+            // }
+            // }
+            ChessBoard.resetBoardGlow();
+
+            if (e.getTarget() instanceof Piece && this.pieceOnSquare() != null) {
                 ArrayList<Square> moveSquares = this.pieceOnSquare().getValidMoves();
                 for (Square square : moveSquares) {
                     square.setEffect(new Glow(0.5));
@@ -53,10 +55,9 @@ public class Square extends StackPane {
     }
 
     public Piece pieceOnSquare() { // returns the piece reference that's on the square
-        try{
+        try {
             return ((Piece) ChessBoard.squares[x][y].getChildren().get(0));
-        }
-        catch(java.lang.IndexOutOfBoundsException e){
+        } catch (java.lang.IndexOutOfBoundsException e) {
             return null;
         }
     }
@@ -71,6 +72,6 @@ public class Square extends StackPane {
 
     @Override
     public String toString() {
-        return "x: "+  x + " y: " + y + " occupied: "+occupied;
+        return "x: " + x + " y: " + y + " occupied: " + occupied;
     }
 }
