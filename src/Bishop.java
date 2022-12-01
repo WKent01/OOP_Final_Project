@@ -36,7 +36,7 @@ public class Bishop extends Piece {
             }
         }
 
-        for (int x = this.pos_X, y = this.pos_Y; x >= 0 && y >= 0; x--, y--) { // Checks the NW diagonal
+        for (int x = this.pos_X-1, y = this.pos_Y-1; x >= 0 && y >= 0; x--, y--) { // Checks the NW diagonal
             if (ChessBoard.squares[x][y].isOccupied()
                     && !ChessBoard.squares[x][y].pieceOnSquare().getColor().equals(this.color)) {
                 moves.add(ChessBoard.squares[x][y]); // Occupied by enemy
@@ -48,7 +48,7 @@ public class Bishop extends Piece {
             }
         }
 
-        for (int x = this.pos_X, y = this.pos_Y; x >= 0 && y < 8; x--, y++) { // Checks the SW diagonal
+        for (int x = this.pos_X-1, y = this.pos_Y+1; x >= 0 && y < 8; x--, y++) { // Checks the SW diagonal
             if (ChessBoard.squares[x][y].isOccupied()
                     && !ChessBoard.squares[x][y].pieceOnSquare().getColor().equals(this.color)) {
                 moves.add(ChessBoard.squares[x][y]); // Occupied by enemy
