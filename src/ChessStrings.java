@@ -9,9 +9,12 @@ public class ChessStrings {
     public static String encodeMove(Piece p, Square s, boolean promoted) { // note: no support for ambiguous moves,
                                                                            // castling
                                                                            
-        String move = "";                               
-        if (!p.name.equals("Pawn"))
+        String move = "";
+        if(p.name.equals("Knight"))
+            move+="N";
+        else if (!p.name.equals("Pawn"))
             move += p.name.substring(0, 1);
+        
         if (s.isOccupied()){
             if(p.name.equals("Pawn")){
                 move+=xLookup.get(p.pos_X);
