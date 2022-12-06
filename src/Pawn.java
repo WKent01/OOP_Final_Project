@@ -11,15 +11,15 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public ArrayList<Square> getValidMoves() {
+    public void setValidMoves() {
 
-        ArrayList<Square> moves = new ArrayList<>();
+        moves.clear();
         try {
 
             if (this.color.equals("white")) {
                 if (this.pos_Y == 6) { // checks to see if the pawn is on its' inital row which then allows the pawn to
                                        // move forward two spaces
-                    if (!(ChessBoard.squares[this.pos_X][this.pos_Y - 2].isOccupied())) {
+                    if (!ChessBoard.squares[this.pos_X][this.pos_Y - 1].isOccupied()&&!ChessBoard.squares[this.pos_X][this.pos_Y - 2].isOccupied()) {
                         moves.add(ChessBoard.squares[this.pos_X][this.pos_Y - 2]);
                         // when moved, set doubleMoved to true.
                     }
@@ -46,7 +46,7 @@ public class Pawn extends Piece {
             } 
             else { // the piece is a black pawn
                 if (this.pos_Y == 1) {
-                    if (!ChessBoard.squares[this.pos_X][this.pos_Y + 2].isOccupied()) {
+                    if (!ChessBoard.squares[this.pos_X][this.pos_Y + 1].isOccupied()&&!ChessBoard.squares[this.pos_X][this.pos_Y + 2].isOccupied()) {
                         moves.add(ChessBoard.squares[this.pos_X][this.pos_Y + 2]);
                         // if moved, set doubleMoved to true.
                     }
@@ -106,8 +106,6 @@ public class Pawn extends Piece {
             // this error is only thrown if a square was accessed and no piece was on that
             // square
         }
-
-        return moves;
     }
 
 }

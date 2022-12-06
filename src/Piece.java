@@ -14,7 +14,7 @@ public abstract class Piece extends ImageView {
     int pos_X, pos_Y;
     String color;
     String name;
-
+    ArrayList<Square> moves;
     /**
      * 
      * @param pos_X the pieces col
@@ -28,7 +28,7 @@ public abstract class Piece extends ImageView {
         this.pos_Y = pos_Y;
         this.color = color;
         this.name = name;
-
+        moves = new ArrayList<>();
         this.setOnDragDetected(event -> {
             Dragboard db = this.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent clipboardContent = new ClipboardContent();
@@ -36,7 +36,7 @@ public abstract class Piece extends ImageView {
             db.setContent(clipboardContent);
 
 
-            ArrayList<Square> moveSquares = this.getValidMoves();
+            ArrayList<Square> moveSquares = moves;
             for (Square square : moveSquares) {
                 square.setEffect(new Glow(0.5));
             }
@@ -58,7 +58,7 @@ public abstract class Piece extends ImageView {
         this.setOnDragDropped(event -> {
             Piece piece = (Piece) event.getGestureSource();
 
-            if (piece.color.equals(ChessBoard.currentPlayer)) {
+            if (piece.color.equals(ChessBoard.currentPlayer)||true) {
                 Piece otherPiece = (Piece) event.getPickResult().getIntersectedNode();
                 Square oldPos = ChessBoard.squares[piece.pos_X][piece.pos_Y];
                 Square newPos = ChessBoard.squares[otherPiece.pos_X][otherPiece.pos_Y];
@@ -68,6 +68,7 @@ public abstract class Piece extends ImageView {
                 ArrayList<Square> moveSquares = piece.getValidMoves();
 
                 if (moveSquares.contains(newPos)) {
+                    String thisMove = ChessStrings.encodeMove(piece, newPos, false);
                     newPos.getChildren().clear();
                     newPos.getChildren().add(piece);
                     newPos.setOccupied(true);
@@ -79,14 +80,14 @@ public abstract class Piece extends ImageView {
 
                     // let the source know whether the image was successfully transferred and used
                     event.setDropCompleted(true);
-                    ChessBoard.endTurn();
+                    ChessBoard.endTurn(thisMove);
 
                 }
 
             
 
             } else {
-                System.err.println("It's not your turn.");
+                System.out.println("It's not your turn.");
                 // TODO: Make this a dialog box
             }
             event.consume();
@@ -111,8 +112,6 @@ public abstract class Piece extends ImageView {
 
     // }
 
-    public abstract ArrayList<Square> getValidMoves(); // method will calculate all valid moves at the pieces current
-                                                       // position on the board and return a list containing all the
-                                                       // squares it can go to
-
+    public abstract void setValidMoves(); // method will calculate all valid moves at the pieces current position on the board 
+    public ArrayList<Square> getValidMoves(){return moves;}
 }

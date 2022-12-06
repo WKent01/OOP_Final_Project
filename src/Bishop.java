@@ -8,9 +8,9 @@ public class Bishop extends Piece {
     }
 
     @Override
-    public ArrayList<Square> getValidMoves() {
+    public void setValidMoves() {
 
-        ArrayList<Square> moves = new ArrayList<>();
+        moves.clear();
 
         for (int x = this.pos_X + 1, y = this.pos_Y + 1; x < 8 && y < 8; x++, y++) { // Checks the SE diagonal
             if (ChessBoard.squares[x][y].isOccupied()
@@ -60,6 +60,5 @@ public class Bishop extends Piece {
             }
         }
 
-        return moves;
     }
 }

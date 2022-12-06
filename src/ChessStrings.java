@@ -25,7 +25,7 @@ public class ChessStrings {
         }
         if (ChessBoard.isCheckmate(p.color.equals("White") ? "Black" : "White"))
             move += "#";
-        else if (ChessBoard.isCheck(p.color.equals("White") ? "Black" : "White"))
+        else if (ChessBoard.isChecked(p.color.equals("White") ? "Black" : "White"))
             move += "+";
         return move;
     }

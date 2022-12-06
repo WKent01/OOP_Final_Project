@@ -7,9 +7,9 @@ public class Rook extends Piece {
     }
 
     @Override
-    public ArrayList<Square> getValidMoves() {
+    public void setValidMoves() {
 
-        ArrayList<Square> moves = new ArrayList<>();
+        moves.clear();
 
         int checkX = pos_X - 1;
         // Check squares to left
@@ -53,6 +53,5 @@ public class Rook extends Piece {
                 break;
         }
 
-        return moves;
     }
 }

@@ -7,15 +7,15 @@ public class Queen extends Piece {
     }
 
     @Override
-    public ArrayList<Square> getValidMoves() {
+    public void setValidMoves() {
 
-        ArrayList<Square> moves = new ArrayList<>();
+        moves.clear();
 
         int checkX = pos_X - 1;
         // Check squares to left
         while (checkX >= 0) {
             Piece posPiece = ChessBoard.squares[checkX][pos_Y].pieceOnSquare();
-            if (posPiece == null || (!(posPiece.name.equals("King")) && !(posPiece.color.equals(this.color))))
+            if (posPiece == null || !(posPiece.color.equals(this.color)))
                 moves.add(ChessBoard.squares[checkX][pos_Y]);
             checkX--;
             if (!(posPiece == null))
@@ -25,7 +25,7 @@ public class Queen extends Piece {
         // Check squares to right
         while (checkX <= 7) {
             Piece posPiece = ChessBoard.squares[checkX][pos_Y].pieceOnSquare();
-            if (posPiece == null || (!(posPiece.name.equals("King")) && !(posPiece.color.equals(this.color))))
+            if (posPiece == null || !(posPiece.color.equals(this.color)))
                 moves.add(ChessBoard.squares[checkX][pos_Y]);
             checkX++;
             if (!(posPiece == null))
@@ -36,7 +36,7 @@ public class Queen extends Piece {
         // Check squares below
         while (checkY >= 0) {
             Piece posPiece = ChessBoard.squares[pos_X][checkY].pieceOnSquare();
-            if (posPiece == null || (!(posPiece.name.equals("King")) && !(posPiece.color.equals(this.color))))
+            if (posPiece == null || !(posPiece.color.equals(this.color)))
                 moves.add(ChessBoard.squares[pos_X][checkY]);
             checkY--;
             if (!(posPiece == null))
@@ -46,7 +46,7 @@ public class Queen extends Piece {
         // Check squares above
         while (checkY <= 7) {
             Piece posPiece = ChessBoard.squares[pos_X][checkY].pieceOnSquare();
-            if (posPiece == null || (!(posPiece.name.equals("King")) && !(posPiece.color.equals(this.color))))
+            if (posPiece == null || !(posPiece.color.equals(this.color)))
                 moves.add(ChessBoard.squares[pos_X][checkY]);
             checkY++;
             if (!(posPiece == null))
@@ -100,7 +100,5 @@ public class Queen extends Piece {
                 moves.add(ChessBoard.squares[x][y]);
             }
         }
-
-        return moves;
     }
 }
