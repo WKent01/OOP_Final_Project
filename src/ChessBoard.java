@@ -36,7 +36,6 @@ public class ChessBoard extends StackPane {
         ChessBoard.board.setOnDragEntered(event -> {
             System.out.println(event.getGestureSource());
             if (event.getGestureSource() != ChessBoard.board && event.getDragboard().hasImage()) {
-                System.out.println("Drag entered.");
                 Piece p = (Piece) event.getGestureSource();
                 p.setOpacity(0.7);
             }
@@ -58,8 +57,6 @@ public class ChessBoard extends StackPane {
             Piece p = (Piece) event.getGestureSource();
             p.setOpacity(1);
 
-            System.out.println("Drag exited.");
-
             event.consume();
         });
 
@@ -71,29 +68,36 @@ public class ChessBoard extends StackPane {
                 Square newPos = (Square) event.getPickResult().getIntersectedNode(); // new square
                 System.out.println(newPos);
                 ArrayList<Square> moveSquares = piece.getValidMoves();
-
                 if (moveSquares.contains(newPos)) { // checks to see if newPos is in here
+                    if(piece.name.equals("Pawn")&&!newPos.isOccupied()&&newPos.x!=oldPos.x){ //En passant handling
+                        newPos.setOccupied(true); //for purposes of proper move reporting
+                        squares[newPos.x][oldPos.y].getChildren().clear();
+                    }
+                    String thisMove = ChessStrings.encodeMove(piece, newPos, false);
                     newPos.getChildren().clear();
                     newPos.getChildren().add(piece);
                     newPos.setOccupied(true);
                     piece.pos_X = newPos.x;
                     piece.pos_Y = newPos.y;
-
+                    if(piece.name.equals("Pawn") && Math.abs(oldPos.y-newPos.y)==2){
+                        ((Pawn)piece).doubleMoved=true;
+                    }
+                    pastMoves.push(thisMove);
+                    System.out.println(thisMove);
                     oldPos.getChildren().clear();
                     oldPos.setOccupied(false);
-
                     // let the source know whether the image was successfully transferred and used
                     event.setDropCompleted(true);
                     endTurn();
                 }
 
-                event.consume();
+                
 
             } else {
                 System.err.println("It's not your turn.");
                 // TODO: Make this a dialog box
             }
-
+            event.consume();
         });
     }
 
@@ -119,7 +123,6 @@ public class ChessBoard extends StackPane {
             }
         }
         addPieces();
-        pastMoves.push("Kxc2#"); // DEBUG: here to prevent EmptyStackException. <- Just do a try catch statement
                                  // pepegA
     }
 

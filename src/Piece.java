@@ -35,33 +35,27 @@ public abstract class Piece extends ImageView {
             clipboardContent.putImage(this.getImage());
             db.setContent(clipboardContent);
 
-            System.err.println("Drag started !");
 
             ArrayList<Square> moveSquares = this.getValidMoves();
             for (Square square : moveSquares) {
                 square.setEffect(new Glow(0.5));
             }
-
             event.consume();
         });
 
         this.setOnDragEntered(event -> {
-            System.out.println("Piece drag entered.");
+            event.consume();
         });
 
         this.setOnDragExited(event -> {
-            System.out.println("Piece drag exited.");
-
             event.consume();
         });
 
         this.setOnDragDone(event -> {
-            System.out.println("Piece drag done.");
             event.consume();
         });
 
         this.setOnDragDropped(event -> {
-            System.out.println("Piece drag dropped.");
             Piece piece = (Piece) event.getGestureSource();
 
             if (piece.color.equals(ChessBoard.currentPlayer)) {
@@ -89,13 +83,13 @@ public abstract class Piece extends ImageView {
 
                 }
 
-                event.consume();
+            
 
             } else {
                 System.err.println("It's not your turn.");
                 // TODO: Make this a dialog box
             }
-
+            event.consume();
         });
 
     }
