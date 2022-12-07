@@ -86,10 +86,10 @@ public class ChessBoard extends StackPane {
 
                         ArrayList<Piece> updateList = (piece.color.equals("white")?whitePieces:blackPieces);
                         ArrayList<ArrayList<Square>> movesUpdateList =(piece.color.equals("white")?whiteValidMoves:blackValidMoves);
-
                         Piece temp = piece;
-                        updateList.set(updateList.indexOf(piece),(piece=new Queen(piece.pos_X,piece.pos_Y,piece.color,"Queen")));
+                        updateList.set(updateList.indexOf(temp),(piece=new Queen(piece.pos_X,piece.pos_Y,piece.color,"Queen")));
                         movesUpdateList.set(movesUpdateList.indexOf(temp.getValidMoves()),piece.getValidMoves());
+                        piece.setValidMoves();
                     }
                     else{
                         thisMove = ChessStrings.encodeMove(piece, newPos, false);

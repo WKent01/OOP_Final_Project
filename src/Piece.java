@@ -75,7 +75,11 @@ public abstract class Piece extends ImageView {
                     if(piece.name.equals("Pawn")&&(newPos.y==0||newPos.y==7)){ //Promotion logic
                         thisMove = ChessStrings.encodeMove(piece, newPos, true);
                         ArrayList<Piece> updateList = (piece.color.equals("white")?ChessBoard.whitePieces:ChessBoard.blackPieces);
-                        updateList.set(updateList.indexOf(piece),(piece=new Queen(piece.pos_X,piece.pos_Y,piece.color,"Queen")));
+                        ArrayList<ArrayList<Square>> movesUpdateList =(piece.color.equals("white")?ChessBoard.whiteValidMoves:ChessBoard.blackValidMoves);
+                        Piece temp = piece;
+                        updateList.set(updateList.indexOf(temp),(piece=new Queen(piece.pos_X,piece.pos_Y,piece.color,"Queen")));
+                        movesUpdateList.set(movesUpdateList.indexOf(temp.getValidMoves()),piece.getValidMoves());
+                        piece.setValidMoves();
                     }
                     else{
                         thisMove = ChessStrings.encodeMove(piece, newPos, false);
