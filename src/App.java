@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -10,7 +12,11 @@ public class App extends Application {
 
         GridPane gPane = new GridPane();
 
-        ChessBoard board = new ChessBoard(gPane);
+        try {
+            ChessBoard board = new ChessBoard(gPane);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         stage.setScene(new Scene(gPane, 800, 800));
 

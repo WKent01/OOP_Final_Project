@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class Bishop extends Piece {
 
     public Bishop(int pos_X, int pos_Y, String color, String name) {

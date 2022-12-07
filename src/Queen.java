@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Iterator;
-
 public class Queen extends Piece {
     public Queen(int pos_X, int pos_Y, String color, String name) {
         super(pos_X, pos_Y, color, name);

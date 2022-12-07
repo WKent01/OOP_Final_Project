@@ -7,7 +7,9 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 public class ChessBoard extends StackPane {
 
     static GridPane board;
@@ -26,12 +28,16 @@ public class ChessBoard extends StackPane {
     static Piece whiteCheck; //The piece currently checking the black king.
     static Piece blackCheck;
     static String currentPlayer;
+    static FileWriter replayWriter;
+    static int moveNumber = 1;
 
-    public ChessBoard(GridPane board) {
+    public ChessBoard(GridPane board) throws IOException {
         // this.board = board;
         ChessBoard.board = board;
         currentPlayer = "white";
-
+        File replayFile = new File("replay.txt");
+            replayFile.createNewFile();
+            replayWriter = new FileWriter(replayFile);
         setUpBoard(board);
 
         ChessBoard.board.setOnDragEntered(event -> {
@@ -131,7 +137,6 @@ public class ChessBoard extends StackPane {
 
             } else {
                 System.out.println("It's not your turn.");
-                // TODO: Make this a dialog box
             }
             event.consume();
         });
@@ -161,7 +166,26 @@ public class ChessBoard extends StackPane {
         }
         System.out.println(move);
         pastMoves.push(move);
+        try{
+        if(currentPlayer.equals("white")){
+            replayWriter.write(moveNumber+". "+move);
+        }
+        else
+            replayWriter.write(" "+move+"\n");
+        }
+        catch(IOException e){
+            //This shouldn't happen.
+        }
+
         currentPlayer=nextPlayer;
+        if(currentPlayer.equals("Game Over")){
+            try {
+                replayWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        moveNumber++;
     }
 
     /**
