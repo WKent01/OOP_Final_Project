@@ -77,6 +77,7 @@ public class ChessBoard extends StackPane {
                 if (moveSquares.contains(newPos)) { // checks to see if newPos is in here
                     if(piece.name.equals("Pawn")&&!newPos.isOccupied()&&newPos.x!=oldPos.x){ //En passant handling
                         newPos.setOccupied(true); //for purposes of proper move reporting
+                        squares[newPos.x][oldPos.y].pieceOnSquare().captured();
                         squares[newPos.x][oldPos.y].getChildren().clear();
                         squares[newPos.x][oldPos.y].setOccupied(false);
                     }
@@ -94,7 +95,8 @@ public class ChessBoard extends StackPane {
                         thisMove = ChessStrings.encodeMove(piece, newPos, false);
                     }
                     if(newPos.isOccupied()){
-                        newPos.pieceOnSquare().captured();
+                        if(newPos.pieceOnSquare()!=null)
+                            newPos.pieceOnSquare().captured();
                     }
                     newPos.getChildren().clear();
                     newPos.getChildren().add(piece);
@@ -144,15 +146,12 @@ public class ChessBoard extends StackPane {
 
     public static void endTurn(String move) {
         updateMoves(); //This isn't perfectly optimal, as it wastes time re-checking every piece's moves on each move, rather than only the updated ones. 
-                       //However, finding which pieces need to be updated is far more difficult, and not needing to recalculate on every piece click makes up for it.
+        updateMoves(); //However, finding which pieces need to be updated is far more difficult, and not needing to recalculate on every piece click makes up for it.
                        //Additionally, the time taken here will likely not be noticed, as it's during the time that the human players swap places.
                        //Ideal implemention would be to have each piece be "watching" a set range of squares, 
                        //and give each one a thread that monitors the move stack for additions, and if a move contains a monitored square, to run the update.
         String nextPlayer = currentPlayer.equals("white") ? "black" : "white";
         if(isChecked(nextPlayer)){
-            updateMoves();
-            updateMoves();
-            updateMoves();
             updateMoves();
             if(isCheckmate(nextPlayer)){
                 move+="#";
@@ -169,12 +168,14 @@ public class ChessBoard extends StackPane {
         }
         System.out.println(move);
         pastMoves.push(move);
+        updateMoves(); //For En Passant Checking
         try{
         if(currentPlayer.equals("white")){
             replayWriter.write(moveNumber+". "+move);
         }
         else
             replayWriter.write(" "+move+"\n");
+            moveNumber++;
         }
         catch(IOException e){
             //This shouldn't happen.
@@ -188,7 +189,6 @@ public class ChessBoard extends StackPane {
                 e.printStackTrace();
             }
         }
-        moveNumber++;
     }
 
     /**

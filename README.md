@@ -10,5 +10,5 @@ Move history tracking.
 Known bugs:
 Kings do not properly avoid squares watched by Pawns.
 Kings will sometimes improperly avoid unwatched squares.
-Pieces can move to a position that will open their King to check/mate.
-
+Pieces can sometimes move to a position that will open their King to check/mate.
+Promoted Queens will sometimes fail to check.

@@ -98,29 +98,26 @@ public class Pawn extends Piece {
             //Leftward En Passant
             if (this.pos_X>0 &&
                 ChessBoard.squares[this.pos_X - 1][this.pos_Y].isOccupied() &&
-                ChessBoard.squares[this.pos_X - 1][this.pos_Y].pieceOnSquare().name.equals("Pawn")&&
-                !blocking) {
+                ChessBoard.squares[this.pos_X - 1][this.pos_Y].pieceOnSquare().name.equals("Pawn")) {
                     Pawn otherPawn = (Pawn) ChessBoard.squares[this.pos_X - 1][this.pos_Y].pieceOnSquare();
                     if(!otherPawn.color.equals(this.color)){
                         String lastMove = (ChessBoard.pastMoves.isEmpty()?"":ChessBoard.pastMoves.peek()); 
-                
                         if (otherPawn.doubleMoved &&
                         lastMove.charAt(0)>96 && //Originally this compared the length to 2, but that would break in the offchance that a pawn double-moved to put the king in check.
                         ChessStrings.xLookup.indexOf(lastMove.substring(0,1)) == this.pos_X - 1){
                             moves.add(ChessBoard.squares[this.pos_X - 1][this.pos_Y+(this.color.equals("white")?-1:1)]); 
                         }
+                        else{System.out.println(otherPawn.doubleMoved+" | "+(lastMove.charAt(0)>96)+" | "+(ChessStrings.xLookup.indexOf(lastMove.substring(0,1)) == this.pos_X));}
                     }
             }
 
             //Rightward En Passant
             if (this.pos_X<7 &&
                 ChessBoard.squares[this.pos_X+1][this.pos_Y].isOccupied() &&
-                ChessBoard.squares[this.pos_X+1][this.pos_Y].pieceOnSquare().name.equals("Pawn")&&
-                !blocking) {
+                ChessBoard.squares[this.pos_X+1][this.pos_Y].pieceOnSquare().name.equals("Pawn")) {
                     Pawn otherPawn = (Pawn) ChessBoard.squares[this.pos_X+1][this.pos_Y].pieceOnSquare();
                     if(!otherPawn.color.equals(this.color)){
                         String lastMove = (ChessBoard.pastMoves.isEmpty()?"":ChessBoard.pastMoves.peek()); 
-            
                         if (otherPawn.doubleMoved &&
                         lastMove.charAt(0)>96 && //Originally this compared the length to 2, but that would break in the offchance that a pawn double-moved to put the king in check.
                         ChessStrings.xLookup.indexOf(lastMove.substring(0,1)) == this.pos_X+1){
