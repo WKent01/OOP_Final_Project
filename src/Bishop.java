@@ -11,7 +11,7 @@ public class Bishop extends Piece {
     public void setValidMoves() {
 
         moves.clear();
-
+        watching.clear();
         for (int x = this.pos_X + 1, y = this.pos_Y + 1; x < 8 && y < 8; x++, y++) { // Checks the SE diagonal
             if (ChessBoard.squares[x][y].isOccupied()
                     && !ChessBoard.squares[x][y].pieceOnSquare().getColor().equals(this.color)) {
@@ -54,7 +54,8 @@ public class Bishop extends Piece {
                 moves.add(ChessBoard.squares[x][y]); // Occupied by enemy
                 break;
             } else if (ChessBoard.squares[x][y].isOccupied()) {
-                break; // break on ally occupation
+                watching.add(ChessBoard.squares[x][y]);
+                break;
             } else {
                 moves.add(ChessBoard.squares[x][y]);
             }

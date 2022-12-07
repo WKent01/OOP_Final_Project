@@ -15,7 +15,9 @@ public abstract class Piece extends ImageView {
     int pos_X, pos_Y;
     String color;
     String name;
+    boolean hasMoved;
     ArrayList<Square> moves;
+    ArrayList<Square> watching;
     /**
      * 
      * @param pos_X the pieces col
@@ -25,11 +27,13 @@ public abstract class Piece extends ImageView {
      */
 
     public Piece(int pos_X, int pos_Y, String color, String name) {
+        hasMoved=false;
         this.pos_X = pos_X;
         this.pos_Y = pos_Y;
         this.color = color;
         this.name = name;
         moves = new ArrayList<>();
+        watching = new ArrayList<>();
         this.setOnDragDetected(event -> {
             Dragboard db = this.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent clipboardContent = new ClipboardContent();
@@ -92,6 +96,7 @@ public abstract class Piece extends ImageView {
                     oldPos.getChildren().clear();
                     oldPos.setOccupied(false);
 
+                    piece.hasMoved=true;
                     // let the source know whether the image was successfully transferred and used
                     event.setDropCompleted(true);
                     ChessBoard.endTurn(thisMove);
@@ -116,6 +121,16 @@ public abstract class Piece extends ImageView {
         this.moves=new ArrayList<Square>();
         this.pos_X=-1;
         this.pos_Y=-1;
+        if(this.color.equals("white")){
+            ChessBoard.whitePieces.remove(this);
+            ChessBoard.whiteValidMoves.remove(this.moves);
+            ChessBoard.whiteWatchedSquares.remove(this.watching);
+        }
+        else{
+            ChessBoard.blackPieces.remove(this);
+            ChessBoard.blackValidMoves.remove(this.moves);
+            ChessBoard.blackWatchedSquares.remove(this.watching);
+        }
     }
 
     public void setPieceImage() { // Sets the pieces corresponding image

@@ -10,47 +10,80 @@ public class Rook extends Piece {
     public void setValidMoves() {
 
         moves.clear();
-
+        watching.clear();
         int checkX = pos_X - 1;
+        Square checkSquare;
         // Check squares to left
         while (checkX >= 0) {
-            Piece posPiece = ChessBoard.squares[checkX][pos_Y].pieceOnSquare();
-            if (posPiece == null || !(posPiece.color.equals(this.color)))
-                moves.add(ChessBoard.squares[checkX][pos_Y]);
-            checkX--;
-            if (!(posPiece == null))
+            checkSquare = ChessBoard.squares[checkX][pos_Y];
+            if(checkSquare.isOccupied()){
+                if(checkSquare.pieceOnSquare().color.equals(this.color)){
+                    watching.add(checkSquare);
+                }
+                else{
+                    moves.add(checkSquare);
+                }
                 break;
+            }
+            else{
+                moves.add(checkSquare);
+            }
+            checkX--;
         }
         checkX = pos_X + 1;
         // Check squares to right
         while (checkX <= 7) {
-            Piece posPiece = ChessBoard.squares[checkX][pos_Y].pieceOnSquare();
-            if (posPiece == null || !(posPiece.color.equals(this.color)))
-                moves.add(ChessBoard.squares[checkX][pos_Y]);
-            checkX++;
-            if (!(posPiece == null))
+            checkSquare = ChessBoard.squares[checkX][pos_Y];
+            if(checkSquare.isOccupied()){
+                if(checkSquare.pieceOnSquare().color.equals(this.color)){
+                    watching.add(checkSquare);
+                }
+                else{
+                    moves.add(checkSquare);
+                }
                 break;
+            }
+            else{
+                moves.add(checkSquare);
+            }
+            checkX++;
         }
 
         int checkY = pos_Y - 1;
         // Check squares below
         while (checkY >= 0) {
-            Piece posPiece = ChessBoard.squares[pos_X][checkY].pieceOnSquare();
-            if (posPiece == null || !(posPiece.color.equals(this.color)))
-                moves.add(ChessBoard.squares[pos_X][checkY]);
-            checkY--;
-            if (!(posPiece == null))
+            checkSquare = ChessBoard.squares[pos_X][checkY];
+            if(checkSquare.isOccupied()){
+                if(checkSquare.pieceOnSquare().color.equals(this.color)){
+                    watching.add(checkSquare);
+                }
+                else{
+                    moves.add(checkSquare);
+                }
                 break;
+            }
+            else{
+                moves.add(checkSquare);
+            }
+            checkY--;
         }
         checkY = pos_Y + 1;
         // Check squares above
         while (checkY <= 7) {
-            Piece posPiece = ChessBoard.squares[pos_X][checkY].pieceOnSquare();
-            if (posPiece == null || !(posPiece.color.equals(this.color)))
-                moves.add(ChessBoard.squares[pos_X][checkY]);
-            checkY++;
-            if (!(posPiece == null))
+            checkSquare = ChessBoard.squares[pos_X][checkY];
+            if(checkSquare.isOccupied()){
+                if(checkSquare.pieceOnSquare().color.equals(this.color)){
+                    watching.add(checkSquare);
+                }
+                else{
+                    moves.add(checkSquare);
+                }
                 break;
+            }
+            else{
+                moves.add(checkSquare);
+            }
+            checkY++;
         }
 
         checkMoves();

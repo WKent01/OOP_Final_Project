@@ -17,6 +17,8 @@ public class ChessBoard extends StackPane {
                                                     // replays and handling en passant.
     static ArrayList<ArrayList<Square>> whiteValidMoves = new ArrayList<>(); // List of all current squares that white pieces can be moved to.
     static ArrayList<ArrayList<Square>> blackValidMoves = new ArrayList<>(); // Same as above, but for black.
+    static ArrayList<ArrayList<Square>> whiteWatchedSquares = new ArrayList<>(); //List of squares a white piece could capture if there were a black piece on it.
+    static ArrayList<ArrayList<Square>> blackWatchedSquares = new ArrayList<>();
     static ArrayList<Piece> whitePieces = new ArrayList<>();
     static ArrayList<Piece> blackPieces = new ArrayList<>();
     static King blackKing;
@@ -86,12 +88,7 @@ public class ChessBoard extends StackPane {
                         thisMove = ChessStrings.encodeMove(piece, newPos, false);
                     }
                     if(newPos.isOccupied()){
-                        Piece captured = newPos.pieceOnSquare();
-                        ArrayList<Piece> updateList = (captured.color.equals("white")?whitePieces:blackPieces);
-                        ArrayList<ArrayList<Square>> movesUpdateList =(captured.color.equals("white")?whiteValidMoves:blackValidMoves);
-                        updateList.remove(captured);
-                        movesUpdateList.remove(captured.getValidMoves());
-                        captured.captured();
+                        newPos.pieceOnSquare().captured();
                     }
                     newPos.getChildren().clear();
                     newPos.getChildren().add(piece);
@@ -101,10 +98,32 @@ public class ChessBoard extends StackPane {
                     if(piece.name.equals("Pawn") && Math.abs(oldPos.y-newPos.y)==2){
                         ((Pawn)piece).doubleMoved=true;
                     }
+                    else if(piece.name.equals("King") && Math.abs(oldPos.x-newPos.x)>1){
+                        //Move Rook during Castling.
+                        if(oldPos.x-newPos.x>1){
+                            Rook castled = (Rook)(squares[0][7]).pieceOnSquare();
+                            squares[0][7].getChildren().clear();
+                            squares[0][7].setOccupied(false);
+                            squares[3][7].getChildren().add(castled);
+                            squares[3][7].setOccupied(true);
+                            castled.pos_X=3;
+                            thisMove="O-O-O";
+                        }
+                        else{
+                            Rook castled = (Rook)(squares[7][7]).pieceOnSquare();
+                            squares[7][7].getChildren().clear();
+                            squares[7][7].setOccupied(false);
+                            squares[5][7].getChildren().add(castled);
+                            squares[5][7].setOccupied(true);
+                            castled.pos_X=5;
+                            thisMove="O-O";
+                        }
+                    }
                     oldPos.getChildren().clear();
                     oldPos.setOccupied(false);
                     // let the source know whether the image was successfully transferred and used
                     event.setDropCompleted(true);
+                    piece.hasMoved=true;
                     endTurn(thisMove);
                 }
 
@@ -199,10 +218,12 @@ public class ChessBoard extends StackPane {
         if(piece.color.equals("white")){
             whitePieces.add(piece);
             whiteValidMoves.add(piece.getValidMoves());
+            whiteWatchedSquares.add(piece.watching);
         }
         else{
             blackPieces.add(piece);
             blackValidMoves.add(piece.getValidMoves());
+            blackWatchedSquares.add(piece.watching);
         }
     }
 
@@ -214,6 +235,7 @@ public class ChessBoard extends StackPane {
                     return true;
                 }
             }
+            whiteCheck=null;
             return false;
         }
         else{
@@ -223,6 +245,7 @@ public class ChessBoard extends StackPane {
                     return true;
                 }
             }
+            blackCheck=null;
             return false;
         }
     }
