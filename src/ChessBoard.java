@@ -15,8 +15,8 @@ public class ChessBoard extends StackPane {
                                                   // the pieces that will be on the squares
     static Stack<String> pastMoves = new Stack<>(); // Push each move to this stack after it has been played. Used for
                                                     // replays and handling en passant.
-    static ArrayList<ArrayList<Square>> WhiteValidMoves = new ArrayList<>(); // List of all current squares that white pieces can be moved to.
-    static ArrayList<ArrayList<Square>> BlackValidMoves = new ArrayList<>(); // Same as above, but for black.
+    static ArrayList<ArrayList<Square>> whiteValidMoves = new ArrayList<>(); // List of all current squares that white pieces can be moved to.
+    static ArrayList<ArrayList<Square>> blackValidMoves = new ArrayList<>(); // Same as above, but for black.
     static ArrayList<Piece> whitePieces = new ArrayList<>();
     static ArrayList<Piece> blackPieces = new ArrayList<>();
     static King blackKing;
@@ -33,7 +33,6 @@ public class ChessBoard extends StackPane {
         setUpBoard(board);
 
         ChessBoard.board.setOnDragEntered(event -> {
-            System.out.println(event.getGestureSource());
             if (event.getGestureSource() != ChessBoard.board && event.getDragboard().hasImage()) {
                 Piece p = (Piece) event.getGestureSource();
                 p.setOpacity(0.7);
@@ -62,7 +61,8 @@ public class ChessBoard extends StackPane {
         ChessBoard.board.setOnDragDropped(event -> {
             Piece piece = (Piece) event.getGestureSource();
                 //debug so i can fling pieces around faster
-            if (piece.color.equals(currentPlayer)||true) { // checks if the piece is the color of the current player
+            if (piece.color.equals(currentPlayer)) { // checks if the piece is the color of the current player
+                String thisMove;
                 Square oldPos = ChessBoard.squares[piece.pos_X][piece.pos_Y];
                 Square newPos = (Square) event.getPickResult().getIntersectedNode(); // new square
                 System.out.println(newPos);
@@ -73,7 +73,27 @@ public class ChessBoard extends StackPane {
                         squares[newPos.x][oldPos.y].getChildren().clear();
                         squares[newPos.x][oldPos.y].setOccupied(false);
                     }
-                    String thisMove = ChessStrings.encodeMove(piece, newPos, false);
+                    if(piece.name.equals("Pawn")&&(newPos.y==0||newPos.y==7)){ //Promotion logic
+                        thisMove = ChessStrings.encodeMove(piece, newPos, true);
+
+                        ArrayList<Piece> updateList = (piece.color.equals("white")?whitePieces:blackPieces);
+                        ArrayList<ArrayList<Square>> movesUpdateList =(piece.color.equals("white")?whiteValidMoves:blackValidMoves);
+
+                        Piece temp = piece;
+                        updateList.set(updateList.indexOf(piece),(piece=new Queen(piece.pos_X,piece.pos_Y,piece.color,"Queen")));
+                        movesUpdateList.set(movesUpdateList.indexOf(temp.getValidMoves()),piece.getValidMoves());
+                        System.out.println(piece.name);
+                    }
+                    else{
+                        thisMove = ChessStrings.encodeMove(piece, newPos, false);
+                    }
+                    if(newPos.isOccupied()){
+                        Piece captured = newPos.pieceOnSquare();
+                        ArrayList<Piece> updateList = (piece.color.equals("white")?whitePieces:blackPieces);
+                        ArrayList<ArrayList<Square>> movesUpdateList =(piece.color.equals("white")?whiteValidMoves:blackValidMoves);
+                        updateList.remove(captured);
+                        movesUpdateList.remove(captured.getValidMoves());
+                    }
                     newPos.getChildren().clear();
                     newPos.getChildren().add(piece);
                     newPos.setOccupied(true);
@@ -107,9 +127,11 @@ public class ChessBoard extends StackPane {
                        //and give each one a thread that monitors the move stack for additions, and if a move contains a monitored square, to run the update.
         String nextPlayer = currentPlayer.equals("white") ? "black" : "white";
         if(isChecked(nextPlayer)){
+            updateMoves();
             if(isCheckmate(nextPlayer)){
                 move+="#";
                 nextPlayer="Game Over";
+                System.out.println(currentPlayer+" Won!");
             }
             else{
             move+="+";
@@ -149,11 +171,17 @@ public class ChessBoard extends StackPane {
 
     public static void updateMoves(){
         for(Piece p:whitePieces){
-            p.setValidMoves();
+            if(!p.name.equals("King")){
+                p.setValidMoves();
+            }
         }
         for(Piece p:blackPieces){
-            p.setValidMoves();
+            if(!p.name.equals("King")){
+                p.setValidMoves();
+            }
         }
+        whiteKing.setValidMoves();
+        blackKing.setValidMoves(); //These are separate so that all checked squares can be up-to-date.
     }
 
     /**
@@ -167,28 +195,31 @@ public class ChessBoard extends StackPane {
         square.setOccupied(true);
         if(piece.color.equals("white")){
             whitePieces.add(piece);
-            WhiteValidMoves.add(piece.getValidMoves());
+            whiteValidMoves.add(piece.getValidMoves());
         }
         else{
             blackPieces.add(piece);
-            BlackValidMoves.add(piece.getValidMoves());
+            blackValidMoves.add(piece.getValidMoves());
         }
     }
 
     public static boolean isChecked(String color) { // This method will return true if the specified color is in check.
         if(color.equals("black")){
-            for (int i = 0; i < WhiteValidMoves.size(); i++) {
-                if(WhiteValidMoves.get(i).contains(squares[blackKing.pos_X][blackKing.pos_Y])){
+            for (int i = 0; i < whiteValidMoves.size(); i++) {
+                if(whiteValidMoves.get(i).contains(squares[blackKing.pos_X][blackKing.pos_Y])){
                     whiteCheck=whitePieces.get(i);
+                    System.out.println(whiteCheck);
+                    System.out.println(color+"is checked by a "+whiteCheck.name);
                     return true;
                 }
             }
             return false;
         }
         else{
-            for (int i = 0; i < BlackValidMoves.size(); i++) {
-                if(BlackValidMoves.get(i).contains(squares[whiteKing.pos_X][whiteKing.pos_Y])){
-                    blackCheck=whitePieces.get(i);
+            for (int i = 0; i < blackValidMoves.size(); i++) {
+                if(blackValidMoves.get(i).contains(squares[whiteKing.pos_X][whiteKing.pos_Y])){
+                    blackCheck=blackPieces.get(i);
+                    System.out.println(color+"is checked by a "+blackCheck.name);
                     return true;
                 }
             }
@@ -197,7 +228,14 @@ public class ChessBoard extends StackPane {
     }
 
     public static boolean isCheckmate(String color) { // This method will return true if the specified color is checkmated.
-        return isChecked(color) && (color.equals("White") ? whiteKing : blackKing).getValidMoves().size() > 0;
+        if(!isChecked(color)){
+            return false;
+        }
+        int numMoves = 0;
+        for (ArrayList list : (color.equals("white")?whiteValidMoves:blackValidMoves)) {
+            numMoves+=list.size();
+        }
+        return numMoves==0;
     }
 
     public void addPieces() { // creates all the pieces for the game

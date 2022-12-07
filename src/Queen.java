@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Queen extends Piece {
     public Queen(int pos_X, int pos_Y, String color, String name) {
@@ -100,5 +101,7 @@ public class Queen extends Piece {
                 moves.add(ChessBoard.squares[x][y]);
             }
         }
+
+        checkMoves();
     }
 }

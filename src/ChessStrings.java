@@ -24,12 +24,8 @@ public class ChessStrings {
         move += xLookup.get(s.x);
         move += yLookup.get(s.y);
         if (promoted) {
-            move = move.substring(1) + "=" + p.name.substring(0, 1);
+            move = move + "=Q";
         }
-        if (ChessBoard.isCheckmate(p.color.equals("White") ? "Black" : "White"))
-            move += "#";
-        else if (ChessBoard.isChecked(p.color.equals("White") ? "Black" : "White"))
-            move += "+";
         return move;
     }
     // May be useful to add in a parser to get a Piece and Square from a String.

@@ -62,5 +62,7 @@ public class Knight extends Piece {
                     moves.add(ChessBoard.squares[pos_X + 1][pos_Y - 2]);
             }
         }
+
+        checkMoves();
     }
 }

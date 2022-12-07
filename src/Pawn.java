@@ -14,8 +14,6 @@ public class Pawn extends Piece {
     public void setValidMoves() {
 
         moves.clear();
-        try {
-
             if (this.color.equals("white")) {
                 if (this.pos_Y == 6) { // checks to see if the pawn is on its' inital row which then allows the pawn to
                                        // move forward two spaces
@@ -101,11 +99,7 @@ public class Pawn extends Piece {
                     }
             }
             
-
-        } catch (IndexOutOfBoundsException e) {
-            // this error is only thrown if a square was accessed and no piece was on that
-            // square
-        }
+        checkMoves();
     }
 
 }

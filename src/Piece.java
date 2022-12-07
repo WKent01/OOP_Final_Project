@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -58,7 +59,7 @@ public abstract class Piece extends ImageView {
         this.setOnDragDropped(event -> {
             Piece piece = (Piece) event.getGestureSource();
 
-            if (piece.color.equals(ChessBoard.currentPlayer)||true) {
+            if (piece.color.equals(ChessBoard.currentPlayer)) {
                 Piece otherPiece = (Piece) event.getPickResult().getIntersectedNode();
                 Square oldPos = ChessBoard.squares[piece.pos_X][piece.pos_Y];
                 Square newPos = ChessBoard.squares[otherPiece.pos_X][otherPiece.pos_Y];
@@ -68,7 +69,16 @@ public abstract class Piece extends ImageView {
                 ArrayList<Square> moveSquares = piece.getValidMoves();
 
                 if (moveSquares.contains(newPos)) {
-                    String thisMove = ChessStrings.encodeMove(piece, newPos, false);
+                    String thisMove;
+                    if(piece.name.equals("Pawn")&&(newPos.y==0||newPos.y==7)){ //Promotion logic
+                        thisMove = ChessStrings.encodeMove(piece, newPos, true);
+                        ArrayList<Piece> updateList = (piece.color.equals("white")?ChessBoard.whitePieces:ChessBoard.blackPieces);
+                        updateList.set(updateList.indexOf(piece),(piece=new Queen(piece.pos_X,piece.pos_Y,piece.color,"Queen")));
+                        System.out.println(piece.name);
+                    }
+                    else{
+                        thisMove = ChessStrings.encodeMove(piece, newPos, false);
+                    }
                     newPos.getChildren().clear();
                     newPos.getChildren().add(piece);
                     newPos.setOccupied(true);
@@ -113,5 +123,61 @@ public abstract class Piece extends ImageView {
     // }
 
     public abstract void setValidMoves(); // method will calculate all valid moves at the pieces current position on the board 
+    
+    public void checkMoves(){
+        if(ChessBoard.isChecked(this.color)){
+            System.out.println("We're checked!");
+            Iterator<Square> tester = moves.iterator();
+            while(tester.hasNext()){
+
+                Square test = tester.next();
+                Piece enemyCheck = (this.color.equals("white")?ChessBoard.blackCheck:ChessBoard.whiteCheck);
+                King thisKing = (this.color.equals("white")?ChessBoard.whiteKing:ChessBoard.blackKing);
+                ArrayList<Piece> enemyPieces = (this.color.equals("white")?ChessBoard.blackPieces:ChessBoard.whitePieces);
+                ArrayList<ArrayList<Square>> enemyMoves = (this.color.equals("white")?ChessBoard.blackValidMoves:ChessBoard.whiteValidMoves);
+
+                if(test.isOccupied()&&!test.pieceOnSquare().equals(enemyCheck)){
+                    System.out.println("Square is occupied by a non-checking enemy, removing.");
+                    tester.remove();
+                }
+                else if(enemyMoves.get(enemyPieces.indexOf(enemyCheck)).contains(test)){
+                    System.out.println("Square is valid for enemy checker.");
+                    int kingX = thisKing.pos_X;
+                    int kingY = thisKing.pos_Y;
+                    int oppX = enemyCheck.pos_X;
+                    int oppY = enemyCheck.pos_Y;
+                    int thisX = test.x;
+                    int thisY = test.y;
+                    if(!between(kingX,kingY,thisX,thisY,oppX,oppY)){
+                        tester.remove();
+                    }
+                }
+                else if(!test.isOccupied()){
+                    tester.remove();
+                }
+                else{
+                    System.out.println("Square will block the check, keeping.");
+                }
+            }
+        }
+    }
+
+    public boolean between(int ax, int ay, int cx, int cy, int bx, int by){
+        int dxc = cx-ax;
+        int dyc = cx-ay;
+        int dxl = bx-ax;
+        int dyl = by-ay;
+        int cross = dxc * dyl - dyc * dxl;
+        if(cross!=0){
+            return false;
+        }
+
+        if(Math.abs(dxl)>=Math.abs(dyl)){
+            return(dxl>0?(ax<=cx&&cx<=bx):(bx<=cx&&cx<=ax));
+        }
+        else{
+            return(dyl>0?(ay<=cy&&cy<=by):(by<=cy&&cy<=ay));
+        }
+    }
     public ArrayList<Square> getValidMoves(){return moves;}
 }
