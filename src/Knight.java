@@ -155,7 +155,7 @@ public class Knight extends Piece {
                         moves.add(checkSquare);
                     else
                         watching.add(checkSquare);
-    
+                }
             }
             if (pos_Y >= 2) {
                 if((checkSquare=ChessBoard.squares[pos_X + 1][pos_Y - 2]).isOccupied()){
@@ -177,7 +177,7 @@ public class Knight extends Piece {
                 }
             }
         }
-        }
         checkMoves();
     }
+    
 }
