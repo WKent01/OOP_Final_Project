@@ -25,9 +25,9 @@ Everything JavaFX related,
        Created all of the pieces and the correct images for them attached to them, 
 Implemented the turn system, 
        
-I did majority of the external logic/ front-end of the project, 
+Kent did majority of the external logic/ front-end of the project, 
 
-//Put things that Gianni did here
+Gianni worked on the unique valid move squares (en passant/castling), testing for check/mate, as well as the support for writing moves to a replay file.
 
 
 Things we both worked on together:
