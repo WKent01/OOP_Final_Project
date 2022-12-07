@@ -24,14 +24,29 @@ public class King extends Piece {
                     if(!(testSquare.isOccupied()&&testSquare.pieceOnSquare().color.equals(this.color))){
                         for (ArrayList<Square> testList : blocked) {
                             if(testList.contains(testSquare)){
-                                squareChecked=true;
+                                Piece checker = (this.color.equals("white")?ChessBoard.blackPieces:ChessBoard.whitePieces).get(blocked.indexOf(testList));
+                                if(!checker.name.equals("Pawn"))
+                                    squareChecked=true;
                                 break;
+                            }
+                        }
+                        if(ChessBoard.isChecked(this.color)){ //Test if square would be checked if the king weren't where it currently is.
+                            Piece checkPiece = (this.color.equals("white")?ChessBoard.blackCheck:ChessBoard.whiteCheck);
+                            if(checkPiece.name.equals("Rook")||checkPiece.name.equals("Bishop")||checkPiece.name.equals("Queen")){
+                            int dxc = (pos_X+i)-checkPiece.pos_X;
+                            int dyc = (pos_Y+j)-checkPiece.pos_Y;
+                            int dxl = this.pos_X-checkPiece.pos_X;
+                            int dyl = this.pos_Y-checkPiece.pos_Y;
+                            int cross = dxc * dyl - dyc * dxl;
+                            if(cross==0)
+                                squareChecked=true;
                             }
                         }
                         if(!squareChecked){
                             moves.add(testSquare);
-                        }
+                       }
                     }
+                    
                 }
             }
         }

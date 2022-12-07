@@ -64,8 +64,6 @@ public abstract class Piece extends ImageView {
                 Square oldPos = ChessBoard.squares[piece.pos_X][piece.pos_Y];
                 Square newPos = ChessBoard.squares[otherPiece.pos_X][otherPiece.pos_Y];
 
-                System.out.println(newPos);
-
                 ArrayList<Square> moveSquares = piece.getValidMoves();
 
                 if (moveSquares.contains(newPos)) {
@@ -74,10 +72,16 @@ public abstract class Piece extends ImageView {
                         thisMove = ChessStrings.encodeMove(piece, newPos, true);
                         ArrayList<Piece> updateList = (piece.color.equals("white")?ChessBoard.whitePieces:ChessBoard.blackPieces);
                         updateList.set(updateList.indexOf(piece),(piece=new Queen(piece.pos_X,piece.pos_Y,piece.color,"Queen")));
-                        System.out.println(piece.name);
                     }
                     else{
                         thisMove = ChessStrings.encodeMove(piece, newPos, false);
+                    }
+                    if(newPos.isOccupied()){
+                        Piece captured = newPos.pieceOnSquare();
+                        ArrayList<Piece> updateList = (captured.color.equals("white")?ChessBoard.whitePieces:ChessBoard.blackPieces);
+                        ArrayList<ArrayList<Square>> movesUpdateList =(captured.color.equals("white")?ChessBoard.whiteValidMoves:ChessBoard.blackValidMoves);
+                        updateList.remove(captured);
+                        movesUpdateList.remove(captured.getValidMoves());
                     }
                     newPos.getChildren().clear();
                     newPos.getChildren().add(piece);
@@ -98,7 +102,6 @@ public abstract class Piece extends ImageView {
 
             } else {
                 System.out.println("It's not your turn.");
-                // TODO: Make this a dialog box
             }
             event.consume();
         });
@@ -107,6 +110,12 @@ public abstract class Piece extends ImageView {
 
     public String getColor() {
         return color;
+    }
+
+    public void captured(){
+        this.moves=new ArrayList<Square>();
+        this.pos_X=-1;
+        this.pos_Y=-1;
     }
 
     public void setPieceImage() { // Sets the pieces corresponding image
@@ -126,7 +135,6 @@ public abstract class Piece extends ImageView {
     
     public void checkMoves(){
         if(ChessBoard.isChecked(this.color)){
-            System.out.println("We're checked!");
             Iterator<Square> tester = moves.iterator();
             while(tester.hasNext()){
 
@@ -137,11 +145,9 @@ public abstract class Piece extends ImageView {
                 ArrayList<ArrayList<Square>> enemyMoves = (this.color.equals("white")?ChessBoard.blackValidMoves:ChessBoard.whiteValidMoves);
 
                 if(test.isOccupied()&&!test.pieceOnSquare().equals(enemyCheck)){
-                    System.out.println("Square is occupied by a non-checking enemy, removing.");
                     tester.remove();
                 }
                 else if(enemyMoves.get(enemyPieces.indexOf(enemyCheck)).contains(test)){
-                    System.out.println("Square is valid for enemy checker.");
                     int kingX = thisKing.pos_X;
                     int kingY = thisKing.pos_Y;
                     int oppX = enemyCheck.pos_X;
@@ -155,16 +161,13 @@ public abstract class Piece extends ImageView {
                 else if(!test.isOccupied()){
                     tester.remove();
                 }
-                else{
-                    System.out.println("Square will block the check, keeping.");
-                }
             }
         }
     }
 
     public boolean between(int ax, int ay, int cx, int cy, int bx, int by){
         int dxc = cx-ax;
-        int dyc = cx-ay;
+        int dyc = cy-ay;
         int dxl = bx-ax;
         int dyl = by-ay;
         int cross = dxc * dyl - dyc * dxl;

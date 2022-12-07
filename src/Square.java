@@ -34,8 +34,6 @@ public class Square extends StackPane {
         }
 
         this.setOnMouseClicked(e -> { // clears all glowing squares when the piece is deselected
-            System.out.println("square clicked at " + this.toString());
-            System.out.println(e.getTarget());
             // if (e.getTarget() instanceof Square) {
             // for (int i = 0; i < 8; i++) {
             // for (int j = 0; j < 8; j++) {
