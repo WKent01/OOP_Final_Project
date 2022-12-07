@@ -9,6 +9,9 @@ public class Rook extends Piece {
 
         moves.clear();
         watching.clear();
+        Piece BlockPiece = this.blocksPiece();
+        boolean blocking = !(BlockPiece==null);
+
         int checkX = pos_X - 1;
         Square checkSquare;
         // Check squares to left
@@ -19,12 +22,18 @@ public class Rook extends Piece {
                     watching.add(checkSquare);
                 }
                 else{
-                    moves.add(checkSquare);
+                    if(!blocking||checkSquare.pieceOnSquare().equals(BlockPiece))
+                                moves.add(checkSquare);
+                            else
+                                watching.add(checkSquare);
                 }
                 break;
             }
             else{
-                moves.add(checkSquare);
+                if(!blocking)
+                    moves.add(checkSquare);
+                else
+                    watching.add(checkSquare);
             }
             checkX--;
         }
@@ -37,12 +46,18 @@ public class Rook extends Piece {
                     watching.add(checkSquare);
                 }
                 else{
-                    moves.add(checkSquare);
+                    if(!blocking||checkSquare.pieceOnSquare().equals(BlockPiece))
+                                moves.add(checkSquare);
+                            else
+                                watching.add(checkSquare);
                 }
                 break;
             }
             else{
-                moves.add(checkSquare);
+                if(!blocking)
+                    moves.add(checkSquare);
+                else
+                    watching.add(checkSquare);
             }
             checkX++;
         }
@@ -56,12 +71,18 @@ public class Rook extends Piece {
                     watching.add(checkSquare);
                 }
                 else{
-                    moves.add(checkSquare);
+                    if(!blocking||checkSquare.pieceOnSquare().equals(BlockPiece))
+                                moves.add(checkSquare);
+                            else
+                                watching.add(checkSquare);
                 }
                 break;
             }
             else{
-                moves.add(checkSquare);
+                if(!blocking)
+                    moves.add(checkSquare);
+                else
+                    watching.add(checkSquare);
             }
             checkY--;
         }
@@ -74,12 +95,18 @@ public class Rook extends Piece {
                     watching.add(checkSquare);
                 }
                 else{
-                    moves.add(checkSquare);
+                    if(!blocking||checkSquare.pieceOnSquare().equals(BlockPiece))
+                                moves.add(checkSquare);
+                            else
+                                watching.add(checkSquare);
                 }
                 break;
             }
             else{
-                moves.add(checkSquare);
+                if(!blocking)
+                    moves.add(checkSquare);
+                else
+                    watching.add(checkSquare);
             }
             checkY++;
         }

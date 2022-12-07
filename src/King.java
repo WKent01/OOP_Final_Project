@@ -18,30 +18,35 @@ public class King extends Piece {
         watching.clear();
         ArrayList<ArrayList<Square>>blocked = (this.color.equals("white")?ChessBoard.blackValidMoves:ChessBoard.whiteValidMoves);
         ArrayList<ArrayList<Square>>watched = (this.color.equals("white")?ChessBoard.blackWatchedSquares:ChessBoard.whiteWatchedSquares);
+
+        //Check main 8 squares
         for (int i = -1; i < 2; i++) {
             for(int j = -1; j<2; j++){
                 if(pos_X+i>=0&&pos_X+i<=7&&pos_Y+j>=0&&pos_Y+j<=7){
                     Square testSquare=ChessBoard.squares[pos_X+i][pos_Y+j];
-                    boolean squareChecked = false;                          //Test if any enemy piece is checking a square.
+                    boolean squareChecked = false; //Test if any enemy piece is checking the square.
+
                     if(!(testSquare.isOccupied()&&testSquare.pieceOnSquare().color.equals(this.color))){
+                        //Test if any enemy pieces can move to an empty square.
                         for (ArrayList<Square> testList : blocked) {
                             if(testList.contains(testSquare)){
                                 //Since pawns can't capture empty squares, this makes sure they don't block squares they can move to.
                                 Piece checker = (this.color.equals("white")?ChessBoard.blackPieces:ChessBoard.whitePieces).get(blocked.indexOf(testList));
-                                if(!checker.name.equals("Pawn"))
+                                if(!checker.name.equals("Pawn")){
                                     squareChecked=true;
-                                break;
+                                    break;
+                                }
                             }
                         }
-
+                        //Test if any enemy pieces can move to an occupied square.
                         for (ArrayList<Square> testList : watched) {
                             if(testList.contains(testSquare)){
-                                    squareChecked=true;
+                                squareChecked=true;
                                 break;
                             }
                         }
-
-                        if(ChessBoard.isChecked(this.color)){ //Test if square would be checked if the King were there. e.g. A king moves to a square that a checking Rook can't move to, but only because it's behind the king.
+                        //Test if square would be checked if the King were there. e.g. A king moves to a square that a checking Rook can't move to, but only because it's behind the king.
+                        if(ChessBoard.isChecked(this.color)){ 
                             Piece checkPiece = (this.color.equals("white")?ChessBoard.blackCheck:ChessBoard.whiteCheck);
                             if(checkPiece.name.equals("Rook")||checkPiece.name.equals("Bishop")||checkPiece.name.equals("Queen")){
                             int dxc = (pos_X+i)-checkPiece.pos_X; //Same line detection as in Piece.between(), but does not check if between.
@@ -53,14 +58,17 @@ public class King extends Piece {
                                 squareChecked=true;
                             }
                         }
-                        if(!squareChecked){
-                            moves.add(testSquare);
-                       }
                     }
-                    else if(testSquare.isOccupied()){
-                        watching.add(testSquare);
+                    else{ //Don't allow moves to squares occupied by allies. Without this, a king can even capture itself.
+                        squareChecked=true;
                     }
-                    
+
+                    if(!squareChecked){
+                        moves.add(testSquare);
+                    }
+                    else{
+                        watching.add(testSquare); //Prevents a King from moving next to another King.
+                    }
                 }
             }
         }

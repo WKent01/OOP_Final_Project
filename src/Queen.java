@@ -9,6 +9,9 @@ public class Queen extends Piece {
 
         moves.clear();
         watching.clear();
+        Piece BlockPiece = this.blocksPiece();
+        boolean blocking = !(BlockPiece==null);
+
         int checkX = pos_X - 1;
         Square checkSquare;
         // Check squares to left
@@ -19,12 +22,18 @@ public class Queen extends Piece {
                     watching.add(checkSquare);
                 }
                 else{
-                    moves.add(checkSquare);
+                    if(!blocking||checkSquare.pieceOnSquare().equals(BlockPiece))
+                                moves.add(checkSquare);
+                            else
+                                watching.add(checkSquare);
                 }
                 break;
             }
             else{
-                moves.add(checkSquare);
+                if(!blocking)
+                    moves.add(checkSquare);
+                else
+                    watching.add(checkSquare);
             }
             checkX--;
         }
@@ -37,12 +46,18 @@ public class Queen extends Piece {
                     watching.add(checkSquare);
                 }
                 else{
-                    moves.add(checkSquare);
+                    if(!blocking||checkSquare.pieceOnSquare().equals(BlockPiece))
+                                moves.add(checkSquare);
+                            else
+                                watching.add(checkSquare);
                 }
                 break;
             }
             else{
-                moves.add(checkSquare);
+                if(!blocking)
+                    moves.add(checkSquare);
+                else
+                    watching.add(checkSquare);
             }
             checkX++;
         }
@@ -56,12 +71,18 @@ public class Queen extends Piece {
                     watching.add(checkSquare);
                 }
                 else{
-                    moves.add(checkSquare);
+                    if(!blocking||checkSquare.pieceOnSquare().equals(BlockPiece))
+                                moves.add(checkSquare);
+                            else
+                                watching.add(checkSquare);
                 }
                 break;
             }
             else{
-                moves.add(checkSquare);
+                if(!blocking)
+                    moves.add(checkSquare);
+                else
+                    watching.add(checkSquare);
             }
             checkY--;
         }
@@ -74,69 +95,99 @@ public class Queen extends Piece {
                     watching.add(checkSquare);
                 }
                 else{
-                    moves.add(checkSquare);
+                    if(!blocking||checkSquare.pieceOnSquare().equals(BlockPiece))
+                                moves.add(checkSquare);
+                            else
+                                watching.add(checkSquare);
                 }
                 break;
             }
             else{
-                moves.add(checkSquare);
+                if(!blocking)
+                    moves.add(checkSquare);
+                else
+                    watching.add(checkSquare);
             }
             checkY++;
         }
 
         for (int x = this.pos_X + 1, y = this.pos_Y + 1; x < 8 && y < 8; x++, y++) { // Checks the SE diagonal
-            Square testSquare = ChessBoard.squares[x][y];
-            if (testSquare.isOccupied()
-                    && !testSquare.pieceOnSquare().getColor().equals(this.color)) {
-                moves.add(testSquare); // Occupied by enemy
+            checkSquare = ChessBoard.squares[x][y];
+            if (checkSquare.isOccupied()
+                    && !checkSquare.pieceOnSquare().getColor().equals(this.color)) {
+                        if(!blocking||checkSquare.pieceOnSquare().equals(BlockPiece))
+                        moves.add(checkSquare);
+                    else
+                        watching.add(checkSquare); // Occupied by enemy
                 break;
-            } else if (testSquare.isOccupied()) {
-                watching.add(testSquare);
+            } else if (checkSquare.isOccupied()) {
+                watching.add(checkSquare);
                 break; // break on ally occupation
             } else {
-                moves.add(testSquare);
+                if(!blocking)
+                    moves.add(checkSquare);
+                else
+                    watching.add(checkSquare);
             }
         }
 
         for (int x = this.pos_X + 1, y = this.pos_Y - 1; x < 8 && y >= 0; x++, y--) { // Checks the NE diagonal
-            Square testSquare = ChessBoard.squares[x][y];
-            if (testSquare.isOccupied()
-                    && !testSquare.pieceOnSquare().getColor().equals(this.color)) {
-                moves.add(testSquare); // Occupied by enemy
+            checkSquare = ChessBoard.squares[x][y];
+            if (checkSquare.isOccupied()
+                    && !checkSquare.pieceOnSquare().getColor().equals(this.color)) {
+                        if(!blocking||checkSquare.pieceOnSquare().equals(BlockPiece))
+                        moves.add(checkSquare);
+                    else
+                        watching.add(checkSquare); // Occupied by enemy
                 break;
-            } else if (testSquare.isOccupied()) {
-                watching.add(testSquare);
+            } else if (checkSquare.isOccupied()) {
+                watching.add(checkSquare);
                 break; // break on ally occupation
             } else {
-                moves.add(testSquare);
+                if(!blocking)
+                    moves.add(checkSquare);
+                else
+                    watching.add(checkSquare);
             }
         }
 
         for (int x = this.pos_X-1, y = this.pos_Y-1; x >= 0 && y >= 0; x--, y--) { // Checks the NW diagonal
-            Square testSquare = ChessBoard.squares[x][y];
-            if (testSquare.isOccupied()
-                    && !testSquare.pieceOnSquare().getColor().equals(this.color)) {
-                moves.add(testSquare); // Occupied by enemy
+            checkSquare = ChessBoard.squares[x][y];
+            if (checkSquare.isOccupied()
+                    && !checkSquare.pieceOnSquare().getColor().equals(this.color)) {
+                        if(!blocking||checkSquare.pieceOnSquare().equals(BlockPiece))
+                        moves.add(checkSquare);
+                    else
+                        watching.add(checkSquare); // Occupied by enemy
                 break;
-            } else if (testSquare.isOccupied()) {
-                watching.add(testSquare);
+            } else if (checkSquare.isOccupied()) {
+                watching.add(checkSquare);
                 break; // break on ally occupation
             } else {
-                moves.add(testSquare);
+                if(!blocking)
+                    moves.add(checkSquare);
+                else
+                    watching.add(checkSquare);
             }
         }
 
         for (int x = this.pos_X-1, y = this.pos_Y+1; x >= 0 && y < 8; x--, y++) { // Checks the SW diagonal
-            Square testSquare = ChessBoard.squares[x][y];
-            if (testSquare.isOccupied()
-                    && !testSquare.pieceOnSquare().getColor().equals(this.color)) {
-                moves.add(testSquare); // Occupied by enemy
+            checkSquare = ChessBoard.squares[x][y];
+            if (checkSquare.isOccupied()
+                    && !checkSquare.pieceOnSquare().getColor().equals(this.color)) {
+                        if(!blocking||checkSquare.pieceOnSquare().equals(BlockPiece))
+                        moves.add(checkSquare);
+                    else
+                        watching.add(checkSquare); // Occupied by enemy
                 break;
-            } else if (testSquare.isOccupied()) {
-                watching.add(testSquare);
+            } else if (checkSquare.isOccupied()) {
+                watching.add(checkSquare);
                 break; // break on ally occupation
             } else {
-                moves.add(testSquare);
+                if(!blocking)
+                    moves.add(checkSquare);
+                else
+                    watching.add(checkSquare);
             }
         }
 

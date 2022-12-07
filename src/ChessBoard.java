@@ -151,6 +151,9 @@ public class ChessBoard extends StackPane {
         String nextPlayer = currentPlayer.equals("white") ? "black" : "white";
         if(isChecked(nextPlayer)){
             updateMoves();
+            updateMoves();
+            updateMoves();
+            updateMoves();
             if(isCheckmate(nextPlayer)){
                 move+="#";
                 nextPlayer="Game Over";

@@ -13,15 +13,17 @@ public class Pawn extends Piece {
 
         moves.clear();
         watching.clear();
+        Piece BlockPiece = this.blocksPiece();
+        boolean blocking = !(BlockPiece==null);
             if (this.color.equals("white")) {
                 if (this.pos_Y == 6) { // checks to see if the pawn is on its' inital row which then allows the pawn to
                                        // move forward two spaces
-                    if (!ChessBoard.squares[this.pos_X][this.pos_Y - 1].isOccupied()&&!ChessBoard.squares[this.pos_X][this.pos_Y - 2].isOccupied()) {
+                    if (!ChessBoard.squares[this.pos_X][this.pos_Y - 1].isOccupied()&&!ChessBoard.squares[this.pos_X][this.pos_Y - 2].isOccupied()&&!blocking) {
                         moves.add(ChessBoard.squares[this.pos_X][this.pos_Y - 2]);
                         // when moved, set doubleMoved to true.
                     }
                 }
-                if (!ChessBoard.squares[this.pos_X][this.pos_Y - 1].isOccupied()) { // checks to see if there is any
+                if (!ChessBoard.squares[this.pos_X][this.pos_Y - 1].isOccupied()&&!blocking) { // checks to see if there is any
                     // piece infront of it
                     moves.add(ChessBoard.squares[this.pos_X][this.pos_Y - 1]);
                 }
@@ -29,8 +31,12 @@ public class Pawn extends Piece {
                 if (this.pos_X > 0) { // checks the left diagonal for a black piece
                     Square check = ChessBoard.squares[this.pos_X - 1][this.pos_Y - 1];
                     if (check.isOccupied()) {
-                        if(check.pieceOnSquare().getColor().equals("black"))
-                            moves.add(check);
+                        if(check.pieceOnSquare().getColor().equals("black")){
+                            if(!blocking||check.pieceOnSquare().equals(BlockPiece))
+                                moves.add(check);
+                            else
+                                watching.add(check);
+                        }
                         else
                             watching.add(check);
                     }
@@ -39,8 +45,12 @@ public class Pawn extends Piece {
                 if (this.pos_X < 7) { // checks the right diagonal for a black piece
                     Square check = ChessBoard.squares[this.pos_X + 1][this.pos_Y - 1];
                     if (check.isOccupied()) {
-                        if(check.pieceOnSquare().getColor().equals("black"))
-                            moves.add(check);
+                        if(check.pieceOnSquare().getColor().equals("black")){
+                            if(!blocking||check.pieceOnSquare().equals(BlockPiece))
+                                moves.add(check);
+                            else
+                                watching.add(check);
+                        }
                         else
                             watching.add(check);
                     }
@@ -48,20 +58,24 @@ public class Pawn extends Piece {
             }
             else { // the piece is a black pawn
                 if (this.pos_Y == 1) {
-                    if (!ChessBoard.squares[this.pos_X][this.pos_Y + 1].isOccupied()&&!ChessBoard.squares[this.pos_X][this.pos_Y + 2].isOccupied()) {
+                    if (!ChessBoard.squares[this.pos_X][this.pos_Y + 1].isOccupied()&&!ChessBoard.squares[this.pos_X][this.pos_Y + 2].isOccupied()&&!blocking) {
                         moves.add(ChessBoard.squares[this.pos_X][this.pos_Y + 2]);
                         // if moved, set doubleMoved to true.
                     }
                 }
-                if (!ChessBoard.squares[this.pos_X][this.pos_Y + 1].isOccupied()) {
+                if (!ChessBoard.squares[this.pos_X][this.pos_Y + 1].isOccupied()&&!blocking) {
                     moves.add(ChessBoard.squares[this.pos_X][this.pos_Y + 1]);
                 }
 
                 if (this.pos_X > 0) { // checks the left diagonal for a white piece
                     Square check = ChessBoard.squares[this.pos_X - 1][this.pos_Y + 1];
                     if (check.isOccupied()) {
-                        if(check.pieceOnSquare().getColor().equals("white"))
-                            moves.add(check);
+                        if(check.pieceOnSquare().getColor().equals("white")){
+                            if(!blocking||check.pieceOnSquare().equals(BlockPiece))
+                                moves.add(check);
+                            else
+                                watching.add(check);
+                        }
                         else
                             watching.add(check);
                     }
@@ -70,8 +84,12 @@ public class Pawn extends Piece {
                 if (this.pos_X < 7) { // checks the right diagonal for a white piece
                     Square check = ChessBoard.squares[this.pos_X + 1][this.pos_Y + 1];
                     if (check.isOccupied()) {
-                        if(check.pieceOnSquare().getColor().equals("black"))
-                            moves.add(check);
+                        if(check.pieceOnSquare().getColor().equals("black")){
+                            if(!blocking||check.pieceOnSquare().equals(BlockPiece))
+                                moves.add(check);
+                            else
+                                watching.add(check);
+                        }
                         else
                             watching.add(check);
                     }
@@ -80,7 +98,8 @@ public class Pawn extends Piece {
             //Leftward En Passant
             if (this.pos_X>0 &&
                 ChessBoard.squares[this.pos_X - 1][this.pos_Y].isOccupied() &&
-                ChessBoard.squares[this.pos_X - 1][this.pos_Y].pieceOnSquare().name.equals("Pawn")) {
+                ChessBoard.squares[this.pos_X - 1][this.pos_Y].pieceOnSquare().name.equals("Pawn")&&
+                !blocking) {
                     Pawn otherPawn = (Pawn) ChessBoard.squares[this.pos_X - 1][this.pos_Y].pieceOnSquare();
                     if(!otherPawn.color.equals(this.color)){
                         String lastMove = (ChessBoard.pastMoves.isEmpty()?"":ChessBoard.pastMoves.peek()); 
@@ -96,7 +115,8 @@ public class Pawn extends Piece {
             //Rightward En Passant
             if (this.pos_X<7 &&
                 ChessBoard.squares[this.pos_X+1][this.pos_Y].isOccupied() &&
-                ChessBoard.squares[this.pos_X+1][this.pos_Y].pieceOnSquare().name.equals("Pawn")) {
+                ChessBoard.squares[this.pos_X+1][this.pos_Y].pieceOnSquare().name.equals("Pawn")&&
+                !blocking) {
                     Pawn otherPawn = (Pawn) ChessBoard.squares[this.pos_X+1][this.pos_Y].pieceOnSquare();
                     if(!otherPawn.color.equals(this.color)){
                         String lastMove = (ChessBoard.pastMoves.isEmpty()?"":ChessBoard.pastMoves.peek()); 

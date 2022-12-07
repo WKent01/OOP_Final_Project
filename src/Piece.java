@@ -133,6 +133,33 @@ public abstract class Piece extends ImageView {
         }
     }
 
+    public Piece blocksPiece(){
+        ArrayList<Piece> enemyPieces = (this.color.equals("white")?ChessBoard.blackPieces:ChessBoard.whitePieces);
+        ArrayList<Piece> thisPieces = (this.color.equals("white")?ChessBoard.whitePieces:ChessBoard.blackPieces);
+        King thisKing = (this.color.equals("white")?ChessBoard.whiteKing:ChessBoard.blackKing);
+        boolean otherblocks = false;
+        for(Piece p: enemyPieces){
+            if(p.name.equals("Queen")||p.name.equals("Rook")||p.name.equals("Bishop")){
+                if(p.getValidMoves().contains(ChessBoard.squares[this.pos_X][this.pos_Y])){
+                    if(between(p.pos_X,p.pos_Y,this.pos_X,this.pos_Y,thisKing.pos_X,thisKing.pos_Y)){
+                        for(Piece q:thisPieces){
+                            if(!q.equals(this)&&!q.equals(thisKing)){
+                                if(between(this.pos_X, this.pos_Y, q.pos_X, q.pos_Y, thisKing.pos_X, thisKing.pos_Y)){
+                                    otherblocks=true; 
+                                }
+                            }
+                        }
+                        if(!otherblocks){
+                            return p;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+
     public void setPieceImage() { // Sets the pieces corresponding image
         setImage(new Image("/media/" + this.color + "" + this.name + ".png"));
     }
